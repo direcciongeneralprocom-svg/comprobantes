@@ -136,8 +136,8 @@
     /* Pages grid */
     #pages-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 28px;
     }
 
     .page-card {
@@ -175,11 +175,12 @@
       width: 100%;
       border-radius: 6px;
       overflow: hidden;
-      background: #f8fafc;
+      background: #fff;
+      border: 1px solid #e5e7eb;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 220px;
+      min-height: 280px;
       cursor: zoom-in;
       position: relative;
     }
@@ -204,25 +205,25 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.82);
       z-index: 1000;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 24px;
+      padding: 16px;
+      overflow-y: auto;
     }
     #modal-overlay.open { display: flex; }
     #modal-box {
       background: #fff;
       border-radius: 14px;
-      max-width: 90vw;
-      max-height: 90vh;
-      overflow: auto;
+      width: min(860px, 96vw);
+      margin: auto;
       position: relative;
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.55);
     }
     #modal-header {
       display: flex;
@@ -237,10 +238,10 @@
       background: #f3f4f6;
       border: none;
       border-radius: 6px;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 1.1rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -253,8 +254,8 @@
       color: #dc2626;
       border: none;
       border-radius: 8px;
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       font-size: 1.1rem;
       cursor: pointer;
       display: flex;
@@ -267,9 +268,18 @@
     #modal-canvas-wrap {
       display: flex;
       justify-content: center;
-      overflow: auto;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 12px;
     }
-    #modal-canvas-wrap canvas { display: block; max-width: 100%; height: auto; border-radius: 4px; }
+    #modal-canvas-wrap canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      background: #fff;
+    }
     #modal-assign {
       display: flex;
       gap: 10px;
@@ -278,11 +288,11 @@
     }
     .modal-assign-btn {
       flex: 1;
-      max-width: 160px;
+      max-width: 180px;
       border: 2px solid transparent;
       border-radius: 8px;
-      padding: 8px 0;
-      font-size: 0.875rem;
+      padding: 10px 0;
+      font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s, color 0.15s;
@@ -386,7 +396,7 @@
     @media (max-width: 640px) {
       header { padding: 14px 16px; }
       main { padding: 20px 12px; }
-      #pages-container { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+      #pages-container { grid-template-columns: 1fr; gap: 16px; }
       #modal-box { padding: 12px; }
     }
   </style>
@@ -584,7 +594,7 @@
     refreshModalButtons();
 
     const page     = await pdfJsDoc.getPage(modalPage + 1);
-    const viewport = page.getViewport({ scale: 1.8 });
+    const viewport = page.getViewport({ scale: 2.4 });
     modalCanvas.width  = viewport.width;
     modalCanvas.height = viewport.height;
     await page.render({ canvasContext: modalCanvas.getContext('2d'), viewport }).promise;
@@ -627,7 +637,7 @@
   async function renderThumbnails(n) {
     for (let i = 1; i <= n; i++) {
       const page     = await pdfJsDoc.getPage(i);
-      const viewport = page.getViewport({ scale: 0.55 });
+      const viewport = page.getViewport({ scale: 0.9 });
       const canvas   = document.createElement('canvas');
       canvas.width   = viewport.width;
       canvas.height  = viewport.height;
