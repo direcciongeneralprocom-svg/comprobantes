@@ -136,8 +136,8 @@
     /* Pages grid */
     #pages-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
     }
 
     .page-card {
@@ -179,9 +179,129 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 160px;
+      min-height: 220px;
+      cursor: zoom-in;
+      position: relative;
     }
     .page-canvas-wrap canvas { max-width: 100%; display: block; }
+    .zoom-hint {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: rgba(0,0,0,0.45);
+      color: #fff;
+      font-size: 0.68rem;
+      padding: 3px 7px;
+      border-radius: 4px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .page-canvas-wrap:hover .zoom-hint { opacity: 1; }
+
+    /* Modal */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #modal-overlay.open { display: flex; }
+    #modal-box {
+      background: #fff;
+      border-radius: 14px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: auto;
+      position: relative;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    #modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    #modal-title { font-weight: 700; font-size: 1rem; color: #1a1a2e; }
+    #modal-nav { display: flex; align-items: center; gap: 8px; }
+    .modal-nav-btn {
+      background: #f3f4f6;
+      border: none;
+      border-radius: 6px;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal-nav-btn:hover:not(:disabled) { background: #e5e7eb; }
+    .modal-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    #modal-close {
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    #modal-close:hover { background: #fca5a5; }
+    #modal-canvas-wrap {
+      display: flex;
+      justify-content: center;
+      overflow: auto;
+    }
+    #modal-canvas-wrap canvas { display: block; max-width: 100%; height: auto; border-radius: 4px; }
+    #modal-assign {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .modal-assign-btn {
+      flex: 1;
+      max-width: 160px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      padding: 8px 0;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      letter-spacing: 0.5px;
+    }
+    .modal-assign-btn.comp-btn {
+      background: #eef2ff; color: #4f46e5; border-color: #c7d2fe;
+    }
+    .modal-assign-btn.comp-btn.active,
+    .modal-assign-btn.comp-btn:hover {
+      background: #4f46e5; color: #fff; border-color: #4f46e5;
+    }
+    .modal-assign-btn.aa-btn {
+      background: #ecfdf5; color: #059669; border-color: #a7f3d0;
+    }
+    .modal-assign-btn.aa-btn.active,
+    .modal-assign-btn.aa-btn:hover {
+      background: #059669; color: #fff; border-color: #059669;
+    }
 
     .page-num {
       font-size: 0.78rem;
@@ -266,7 +386,8 @@
     @media (max-width: 640px) {
       header { padding: 14px 16px; }
       main { padding: 20px 12px; }
-      #pages-container { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+      #pages-container { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+      #modal-box { padding: 12px; }
     }
   </style>
 </head>
@@ -347,46 +468,71 @@
 
 </main>
 
+<!-- Modal de previsualización -->
+<div id="modal-overlay">
+  <div id="modal-box">
+    <div id="modal-header">
+      <span id="modal-title">Página 1</span>
+      <div id="modal-nav">
+        <button class="modal-nav-btn" id="modal-prev" title="Anterior">&#8592;</button>
+        <button class="modal-nav-btn" id="modal-next" title="Siguiente">&#8594;</button>
+      </div>
+      <button id="modal-close" title="Cerrar">&#10005;</button>
+    </div>
+    <div id="modal-canvas-wrap">
+      <canvas id="modal-canvas"></canvas>
+    </div>
+    <div id="modal-assign">
+      <button class="modal-assign-btn comp-btn" id="modal-btn-comp">COMP</button>
+      <button class="modal-assign-btn aa-btn"   id="modal-btn-aa">AA</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script>
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-  let pdfJsDoc   = null;
-  let rawBytes   = null;
-  let baseName   = '';
+  let pdfJsDoc    = null;
+  let rawBytes    = null;
+  let baseName    = '';
   let assignments = []; // 'comp' | 'aa' | null per page (0-indexed)
+  let modalPage   = 0;  // current page shown in modal (0-indexed)
 
   // ── Elements ──────────────────────────────────────────────────────────────
-  const uploadZone    = document.getElementById('upload-zone');
-  const fileInput     = document.getElementById('file-input');
-  const uploadBtn     = document.getElementById('upload-btn');
-  const toolbar       = document.getElementById('toolbar');
-  const fileNameEl    = document.getElementById('file-name');
-  const pageCountEl   = document.getElementById('page-count');
-  const pagesContainer= document.getElementById('pages-container');
-  const loadingEl     = document.getElementById('loading');
-  const instructions  = document.getElementById('instructions');
-  const counters      = document.getElementById('counters');
-  const countComp     = document.getElementById('count-comp');
-  const countAA       = document.getElementById('count-aa');
-  const dlComp        = document.getElementById('dl-comp');
-  const dlAA          = document.getElementById('dl-aa');
-  const changeFile    = document.getElementById('change-file');
+  const uploadZone     = document.getElementById('upload-zone');
+  const fileInput      = document.getElementById('file-input');
+  const uploadBtn      = document.getElementById('upload-btn');
+  const toolbar        = document.getElementById('toolbar');
+  const fileNameEl     = document.getElementById('file-name');
+  const pageCountEl    = document.getElementById('page-count');
+  const pagesContainer = document.getElementById('pages-container');
+  const loadingEl      = document.getElementById('loading');
+  const instructions   = document.getElementById('instructions');
+  const counters       = document.getElementById('counters');
+  const countComp      = document.getElementById('count-comp');
+  const countAA        = document.getElementById('count-aa');
+  const dlComp         = document.getElementById('dl-comp');
+  const dlAA           = document.getElementById('dl-aa');
+  const changeFile     = document.getElementById('change-file');
+
+  const modalOverlay   = document.getElementById('modal-overlay');
+  const modalTitle     = document.getElementById('modal-title');
+  const modalCanvas    = document.getElementById('modal-canvas');
+  const modalPrev      = document.getElementById('modal-prev');
+  const modalNext      = document.getElementById('modal-next');
+  const modalClose     = document.getElementById('modal-close');
+  const modalBtnComp   = document.getElementById('modal-btn-comp');
+  const modalBtnAA     = document.getElementById('modal-btn-aa');
 
   // ── Upload events ──────────────────────────────────────────────────────────
   uploadBtn.addEventListener('click', () => fileInput.click());
   uploadZone.addEventListener('click', e => { if (e.target === uploadZone) fileInput.click(); });
+  fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
 
-  fileInput.addEventListener('change', e => {
-    if (e.target.files[0]) handleFile(e.target.files[0]);
-  });
-
-  uploadZone.addEventListener('dragover', e => {
-    e.preventDefault();
-    uploadZone.classList.add('drag-over');
-  });
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
   uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
   uploadZone.addEventListener('drop', e => {
     e.preventDefault();
@@ -395,14 +541,59 @@
     if (file && file.type === 'application/pdf') handleFile(file);
   });
 
-  changeFile.addEventListener('click', () => {
-    fileInput.value = '';
-    fileInput.click();
-  });
+  changeFile.addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
 
   // ── Download ───────────────────────────────────────────────────────────────
   dlComp.addEventListener('click', () => generateAndDownload('comp'));
   dlAA  .addEventListener('click', () => generateAndDownload('aa'));
+
+  // ── Modal events ──────────────────────────────────────────────────────────
+  modalClose.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (!modalOverlay.classList.contains('open')) return;
+    if (e.key === 'Escape')      closeModal();
+    if (e.key === 'ArrowLeft')   navigateModal(-1);
+    if (e.key === 'ArrowRight')  navigateModal(+1);
+  });
+  modalPrev.addEventListener('click', () => navigateModal(-1));
+  modalNext.addEventListener('click', () => navigateModal(+1));
+  modalBtnComp.addEventListener('click', () => { toggleAssign(modalPage, 'comp'); refreshModalButtons(); });
+  modalBtnAA  .addEventListener('click', () => { toggleAssign(modalPage, 'aa');   refreshModalButtons(); });
+
+  function openModal(idx) {
+    modalPage = idx;
+    modalOverlay.classList.add('open');
+    renderModalPage();
+  }
+  function closeModal() {
+    modalOverlay.classList.remove('open');
+  }
+  function navigateModal(dir) {
+    const next = modalPage + dir;
+    if (next >= 0 && next < pdfJsDoc.numPages) {
+      modalPage = next;
+      renderModalPage();
+    }
+  }
+  async function renderModalPage() {
+    const n = pdfJsDoc.numPages;
+    modalTitle.textContent = `Página ${modalPage + 1} de ${n}`;
+    modalPrev.disabled = modalPage === 0;
+    modalNext.disabled = modalPage === n - 1;
+    refreshModalButtons();
+
+    const page     = await pdfJsDoc.getPage(modalPage + 1);
+    const viewport = page.getViewport({ scale: 1.8 });
+    modalCanvas.width  = viewport.width;
+    modalCanvas.height = viewport.height;
+    await page.render({ canvasContext: modalCanvas.getContext('2d'), viewport }).promise;
+  }
+  function refreshModalButtons() {
+    const g = assignments[modalPage];
+    modalBtnComp.classList.toggle('active', g === 'comp');
+    modalBtnAA  .classList.toggle('active', g === 'aa');
+  }
 
   // ── Core ───────────────────────────────────────────────────────────────────
   async function handleFile(file) {
@@ -436,7 +627,7 @@
   async function renderThumbnails(n) {
     for (let i = 1; i <= n; i++) {
       const page     = await pdfJsDoc.getPage(i);
-      const viewport = page.getViewport({ scale: 0.35 });
+      const viewport = page.getViewport({ scale: 0.55 });
       const canvas   = document.createElement('canvas');
       canvas.width   = viewport.width;
       canvas.height  = viewport.height;
@@ -462,6 +653,13 @@
     const wrap = document.createElement('div');
     wrap.className = 'page-canvas-wrap';
     wrap.appendChild(canvas);
+
+    const hint = document.createElement('div');
+    hint.className = 'zoom-hint';
+    hint.textContent = '🔍 Ver ampliado';
+    wrap.appendChild(hint);
+    wrap.addEventListener('click', () => openModal(idx));
+
     card.appendChild(wrap);
 
     const num = document.createElement('div');
@@ -499,7 +697,7 @@
     const card  = document.getElementById(`card-${idx}`);
     const badge = document.getElementById(`badge-${idx}`);
     const g     = assignments[idx];
-    card.className  = `page-card${g ? ' ' + g : ''}`;
+    card.className    = `page-card${g ? ' ' + g : ''}`;
     badge.textContent = g ? g.toUpperCase() : '';
   }
 
