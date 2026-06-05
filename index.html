@@ -137,7 +137,7 @@
     /* ── Pages grid ──────────────────────────────────────────────── */
     #pages-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 20px;
     }
 
@@ -370,11 +370,8 @@
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-  // Identificadores de comprobantes AA:
-  // Se detecta si la Institución Receptora es PEIBO
-  // o si alguna de las CLABEs conocidas aparece en el texto
-  const AA_CLABES  = ['732010100000055161', '732010100000055158'];
-  const AA_KEYWORD = 'PEIBO';
+  // CLABEs receptoras que identifican comprobantes AA
+  const AA_CLABES = ['732010100000055161', '732010100000055158'];
 
   let pdfJsDoc    = null;
   let rawBytes    = null;
@@ -507,11 +504,11 @@
         const textRaw   = content.items.map(item => item.str).join('');
         const textClean = textRaw.replace(/\s+/g, '');
 
-        // Detectar por institución receptora PEIBO (principal)
-        // o por CLABE receptora como respaldo
-        const isAA = textRaw.includes(AA_KEYWORD)
-          || textClean.includes(AA_KEYWORD)
-          || AA_CLABES.some(c => textRaw.includes(c) || textClean.includes(c));
+        // Estrategia robusta: extraer SOLO dígitos de toda la página
+        // y buscar la CLABE como subcadena. Esto funciona aunque el PDF
+        // tenga los dígitos fragmentados en distintos items de texto.
+        const digitsOnly = textRaw.replace(/\D/g, '');
+        const isAA = AA_CLABES.some(c => digitsOnly.includes(c));
         assignments[i - 1] = isAA ? 'aa' : 'comp';
       }
 
@@ -532,7 +529,7 @@
       // ── FASE 3: renderizar miniaturas una por una (progresivo) ────
       for (let i = 1; i <= n; i++) {
         const page   = await pdfJsDoc.getPage(i);
-        const vp     = page.getViewport({ scale: 1.5 });
+        const vp     = page.getViewport({ scale: 1.2 });
         const canvas = document.createElement('canvas');
         canvas.width  = vp.width;
         canvas.height = vp.height;
