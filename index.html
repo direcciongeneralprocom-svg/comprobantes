@@ -25,11 +25,11 @@
     }
     header svg { flex-shrink: 0; }
     header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: 0.5px; }
-    header p { font-size: 0.82rem; opacity: 0.65; margin-top: 2px; }
+    header p  { font-size: 0.82rem; opacity: 0.65; margin-top: 2px; }
 
-    main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+    main { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
 
-    /* Upload zone */
+    /* ── Upload zone ─────────────────────────────────────────────── */
     #upload-zone {
       border: 2.5px dashed #94a3b8;
       border-radius: 16px;
@@ -38,102 +38,103 @@
       text-align: center;
       cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
-      position: relative;
     }
-    #upload-zone:hover, #upload-zone.drag-over {
-      border-color: #4f46e5;
-      background: #eef2ff;
-    }
+    #upload-zone:hover, #upload-zone.drag-over { border-color: #4f46e5; background: #eef2ff; }
     #upload-zone svg { color: #94a3b8; margin-bottom: 16px; }
-    #upload-zone h2 { font-size: 1.1rem; color: #374151; margin-bottom: 6px; }
-    #upload-zone p { font-size: 0.875rem; color: #6b7280; }
+    #upload-zone h2  { font-size: 1.1rem; color: #374151; margin-bottom: 6px; }
+    #upload-zone p   { font-size: 0.875rem; color: #6b7280; }
     #file-input { display: none; }
     #upload-btn {
       margin-top: 20px;
-      background: #4f46e5;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 24px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
+      background: #4f46e5; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 10px 28px; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
     }
     #upload-btn:hover { background: #4338ca; }
 
-    /* Toolbar */
-    #toolbar {
+    /* ── Loading ─────────────────────────────────────────────────── */
+    #loading {
       display: none;
+      text-align: center;
+      padding: 60px 24px;
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+    #loading.visible { display: block; }
+    .spinner {
+      display: inline-block;
+      width: 44px; height: 44px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #4f46e5;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      margin-bottom: 14px;
+    }
+    #loading-msg { margin-top: 6px; font-size: 0.82rem; color: #9ca3af; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Result section ──────────────────────────────────────────── */
+    #result-section { display: none; }
+    #result-section.visible { display: block; }
+
+    /* Detection banner */
+    #detection-banner {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 12px;
-      background: #fff;
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      gap: 16px;
     }
-    #toolbar.visible { display: flex; }
-    #file-info { display: flex; align-items: center; gap: 10px; }
-    #file-info svg { color: #ef4444; }
-    #file-name { font-weight: 600; font-size: 0.95rem; }
-    #page-count { font-size: 0.82rem; color: #6b7280; }
+    #banner-left { display: flex; align-items: center; gap: 14px; }
+    #banner-file { }
+    #banner-filename { font-weight: 700; font-size: 1rem; color: #1a1a2e; }
+    #banner-sub { font-size: 0.82rem; color: #6b7280; margin-top: 3px; }
+    .banner-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 0.8rem; font-weight: 700;
+    }
+    .chip.comp { background: #eef2ff; color: #4f46e5; }
+    .chip.aa   { background: #ecfdf5; color: #059669; }
+    .chip.warn { background: #fef9c3; color: #854d0e; }
 
-    .toolbar-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-
-    .legend { display: flex; gap: 16px; font-size: 0.82rem; align-items: center; }
-    .legend-item { display: flex; align-items: center; gap: 6px; }
-    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
-    .legend-dot.comp { background: #4f46e5; }
-    .legend-dot.aa   { background: #059669; }
-    .legend-dot.none { background: #e5e7eb; border: 1px solid #d1d5db; }
-
-    /* Download buttons */
+    /* Action buttons */
+    #action-buttons {
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
     .dl-btn {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      border: none;
-      border-radius: 8px;
-      padding: 9px 18px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
+      display: flex; align-items: center; gap: 7px;
+      border: none; border-radius: 8px;
+      padding: 10px 20px; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; transition: opacity 0.2s, transform 0.1s;
     }
     .dl-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
     .dl-btn:not(:disabled):hover { opacity: 0.88; transform: translateY(-1px); }
+    .dl-btn.both { background: #1a1a2e; color: #fff; font-size: 0.95rem; padding: 11px 24px; }
     .dl-btn.comp { background: #4f46e5; color: #fff; }
     .dl-btn.aa   { background: #059669; color: #fff; }
-
     #change-file {
-      background: none;
-      border: 1.5px solid #d1d5db;
-      border-radius: 8px;
-      padding: 8px 14px;
-      font-size: 0.82rem;
-      cursor: pointer;
-      color: #374151;
+      background: none; border: 1.5px solid #d1d5db; border-radius: 8px;
+      padding: 9px 14px; font-size: 0.82rem; cursor: pointer; color: #374151;
       transition: border-color 0.2s;
     }
     #change-file:hover { border-color: #6b7280; }
 
-    /* Instructions */
-    #instructions {
-      display: none;
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 0.82rem;
-      color: #92400e;
-      margin-bottom: 20px;
+    /* Manual override note */
+    #override-note {
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-radius: 10px; padding: 10px 16px;
+      font-size: 0.8rem; color: #92400e; margin-bottom: 20px;
     }
-    #instructions.visible { display: block; }
 
-    /* Pages grid */
+    /* ── Pages grid ──────────────────────────────────────────────── */
     #pages-container {
       display: grid;
       grid-template-columns: 1fr;
@@ -143,261 +144,120 @@
     .page-card {
       background: #fff;
       border-radius: 12px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      border: 3px solid transparent;
+      padding: 14px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      border: 4px solid transparent;
       box-shadow: 0 1px 6px rgba(0,0,0,0.08);
       transition: border-color 0.18s, box-shadow 0.18s;
       position: relative;
     }
-    .page-card.comp { border-color: #4f46e5; box-shadow: 0 0 0 1px #4f46e5, 0 4px 12px rgba(79,70,229,0.15); }
-    .page-card.aa   { border-color: #059669; box-shadow: 0 0 0 1px #059669, 0 4px 12px rgba(5,150,105,0.15); }
+    .page-card.comp { border-color: #4f46e5; box-shadow: 0 0 0 1px #4f46e5, 0 4px 16px rgba(79,70,229,0.15); }
+    .page-card.aa   { border-color: #059669; box-shadow: 0 0 0 1px #059669, 0 4px 16px rgba(5,150,105,0.15); }
 
     .badge {
       display: none;
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      border-radius: 20px;
-      padding: 3px 10px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: 0.5px;
+      position: absolute; top: -13px; right: -13px;
+      border-radius: 20px; padding: 4px 13px;
+      font-size: 0.75rem; font-weight: 700; color: #fff; letter-spacing: 0.5px;
     }
     .page-card.comp .badge { display: block; background: #4f46e5; }
     .page-card.aa   .badge { display: block; background: #059669; }
 
+    .auto-tag {
+      font-size: 0.68rem; opacity: 0.75; margin-left: 4px; font-weight: 400;
+    }
+
     .page-canvas-wrap {
       width: 100%;
-      border-radius: 6px;
-      overflow: hidden;
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 600px;
-      cursor: zoom-in;
-      position: relative;
+      border-radius: 6px; overflow: hidden;
+      background: #fff; border: 1px solid #e5e7eb;
+      display: flex; align-items: center; justify-content: center;
+      cursor: zoom-in; position: relative;
     }
     .page-canvas-wrap canvas { max-width: 100%; display: block; }
     .zoom-hint {
-      position: absolute;
-      bottom: 6px;
-      right: 6px;
-      background: rgba(0,0,0,0.45);
-      color: #fff;
-      font-size: 0.68rem;
-      padding: 3px 7px;
-      border-radius: 4px;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s;
+      position: absolute; bottom: 8px; right: 8px;
+      background: rgba(0,0,0,0.5); color: #fff;
+      font-size: 0.72rem; padding: 4px 9px; border-radius: 5px;
+      pointer-events: none; opacity: 0; transition: opacity 0.2s;
     }
     .page-canvas-wrap:hover .zoom-hint { opacity: 1; }
 
-    /* Modal */
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; gap: 12px;
+    }
+    .page-num { font-size: 0.82rem; color: #6b7280; font-weight: 500; }
+
+    .btn-group { display: flex; gap: 6px; }
+    .btn-group button {
+      border: 2px solid transparent; border-radius: 6px;
+      padding: 6px 16px; font-size: 0.78rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
+      letter-spacing: 0.5px;
+    }
+    .btn-assign-comp { background: #eef2ff; color: #4f46e5; border-color: #c7d2fe; }
+    .btn-assign-comp:hover, .page-card.comp .btn-assign-comp { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+    .btn-assign-aa   { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+    .btn-assign-aa:hover,   .page-card.aa   .btn-assign-aa   { background: #059669; color: #fff; border-color: #059669; }
+
+    /* ── Modal ───────────────────────────────────────────────────── */
     #modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.82);
-      z-index: 1000;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 16px;
-      overflow-y: auto;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.82); z-index: 1000;
+      align-items: flex-start; justify-content: center;
+      padding: 16px; overflow-y: auto;
     }
     #modal-overlay.open { display: flex; }
     #modal-box {
-      background: #fff;
-      border-radius: 14px;
-      width: min(860px, 96vw);
-      margin: auto;
-      position: relative;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      background: #fff; border-radius: 14px;
+      width: min(860px, 96vw); margin: auto;
+      padding: 16px; display: flex; flex-direction: column; gap: 12px;
       box-shadow: 0 24px 80px rgba(0,0,0,0.55);
     }
     #modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
     #modal-title { font-weight: 700; font-size: 1rem; color: #1a1a2e; }
     #modal-nav { display: flex; align-items: center; gap: 8px; }
     .modal-nav-btn {
-      background: #f3f4f6;
-      border: none;
-      border-radius: 6px;
-      width: 36px;
-      height: 36px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: #f3f4f6; border: none; border-radius: 6px;
+      width: 36px; height: 36px; cursor: pointer; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
       transition: background 0.15s;
     }
     .modal-nav-btn:hover:not(:disabled) { background: #e5e7eb; }
     .modal-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
     #modal-close {
-      background: #fee2e2;
-      color: #dc2626;
-      border: none;
-      border-radius: 8px;
-      width: 36px;
-      height: 36px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      background: #fee2e2; color: #dc2626; border: none; border-radius: 8px;
+      width: 36px; height: 36px; font-size: 1.1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
       transition: background 0.15s;
     }
     #modal-close:hover { background: #fca5a5; }
     #modal-canvas-wrap {
-      display: flex;
-      justify-content: center;
-      background: #f1f5f9;
-      border-radius: 8px;
-      padding: 12px;
+      display: flex; justify-content: center;
+      background: #f1f5f9; border-radius: 8px; padding: 12px;
     }
     #modal-canvas-wrap canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: 4px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
-      background: #fff;
+      display: block; width: 100%; height: auto;
+      border-radius: 4px; box-shadow: 0 2px 16px rgba(0,0,0,0.18); background: #fff;
     }
-    #modal-assign {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-shrink: 0;
-    }
+    #modal-assign { display: flex; gap: 10px; justify-content: center; }
     .modal-assign-btn {
-      flex: 1;
-      max-width: 180px;
-      border: 2px solid transparent;
-      border-radius: 8px;
-      padding: 10px 0;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s, color 0.15s;
-      letter-spacing: 0.5px;
+      flex: 1; max-width: 180px; border: 2px solid transparent; border-radius: 8px;
+      padding: 10px 0; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s; letter-spacing: 0.5px;
     }
-    .modal-assign-btn.comp-btn {
-      background: #eef2ff; color: #4f46e5; border-color: #c7d2fe;
-    }
-    .modal-assign-btn.comp-btn.active,
-    .modal-assign-btn.comp-btn:hover {
-      background: #4f46e5; color: #fff; border-color: #4f46e5;
-    }
-    .modal-assign-btn.aa-btn {
-      background: #ecfdf5; color: #059669; border-color: #a7f3d0;
-    }
-    .modal-assign-btn.aa-btn.active,
-    .modal-assign-btn.aa-btn:hover {
-      background: #059669; color: #fff; border-color: #059669;
-    }
-
-    .page-num {
-      font-size: 0.78rem;
-      color: #6b7280;
-      font-weight: 500;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 6px;
-      width: 100%;
-    }
-    .btn-group button {
-      flex: 1;
-      border: 2px solid transparent;
-      border-radius: 6px;
-      padding: 6px 0;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s, color 0.15s;
-      letter-spacing: 0.5px;
-    }
-    .btn-assign-comp {
-      background: #eef2ff;
-      color: #4f46e5;
-      border-color: #c7d2fe;
-    }
-    .btn-assign-comp:hover, .page-card.comp .btn-assign-comp {
-      background: #4f46e5;
-      color: #fff;
-      border-color: #4f46e5;
-    }
-    .btn-assign-aa {
-      background: #ecfdf5;
-      color: #059669;
-      border-color: #a7f3d0;
-    }
-    .btn-assign-aa:hover, .page-card.aa .btn-assign-aa {
-      background: #059669;
-      color: #fff;
-      border-color: #059669;
-    }
-
-    /* Loading spinner */
-    #loading {
-      display: none;
-      text-align: center;
-      padding: 48px;
-      color: #6b7280;
-      font-size: 0.9rem;
-    }
-    #loading.visible { display: block; }
-    .spinner {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      border: 4px solid #e5e7eb;
-      border-top-color: #4f46e5;
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-      margin-bottom: 12px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Counter */
-    #counters {
-      display: none;
-      gap: 8px;
-      font-size: 0.8rem;
-      align-items: center;
-    }
-    #counters.visible { display: flex; }
-    .counter-tag {
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-    }
-    .counter-tag.comp { background: #eef2ff; color: #4f46e5; }
-    .counter-tag.aa   { background: #ecfdf5; color: #059669; }
+    .modal-assign-btn.comp-btn { background: #eef2ff; color: #4f46e5; border-color: #c7d2fe; }
+    .modal-assign-btn.comp-btn.active, .modal-assign-btn.comp-btn:hover { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+    .modal-assign-btn.aa-btn { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+    .modal-assign-btn.aa-btn.active, .modal-assign-btn.aa-btn:hover { background: #059669; color: #fff; border-color: #059669; }
 
     @media (max-width: 640px) {
       header { padding: 14px 16px; }
       main { padding: 20px 12px; }
-      #pages-container { grid-template-columns: 1fr; gap: 16px; }
-      #modal-box { padding: 12px; }
+      #detection-banner { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -405,11 +265,14 @@
 
 <header>
   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/>
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="9" y1="15" x2="15" y2="15"/>
+    <line x1="9" y1="11" x2="15" y2="11"/>
   </svg>
   <div>
     <h1>Divisor de PDF</h1>
-    <p>Selecciona páginas y genera archivos COMP y AA</p>
+    <p>Detección automática de comprobantes AA y COMP</p>
   </div>
 </header>
 
@@ -418,63 +281,65 @@
   <!-- Upload zone -->
   <div id="upload-zone">
     <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="17 8 12 3 7 8"/>
+      <line x1="12" y1="3" x2="12" y2="15"/>
     </svg>
     <h2>Arrastra tu PDF aquí</h2>
-    <p>o haz clic para seleccionar el archivo</p>
+    <p>Se detectarán automáticamente los comprobantes AA y COMP</p>
     <button id="upload-btn">Seleccionar PDF</button>
     <input type="file" id="file-input" accept="application/pdf">
-  </div>
-
-  <!-- Toolbar -->
-  <div id="toolbar">
-    <div id="file-info">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-      </svg>
-      <div>
-        <div id="file-name">—</div>
-        <div id="page-count">—</div>
-      </div>
-    </div>
-
-    <div class="toolbar-actions">
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot none"></div> Sin asignar</div>
-        <div class="legend-item"><div class="legend-dot comp"></div> COMP</div>
-        <div class="legend-item"><div class="legend-dot aa"></div> AA</div>
-      </div>
-
-      <div id="counters">
-        <span class="counter-tag comp" id="count-comp">COMP: 0</span>
-        <span class="counter-tag aa"   id="count-aa">AA: 0</span>
-      </div>
-
-      <button class="dl-btn comp" id="dl-comp" disabled>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Descargar COMP
-      </button>
-      <button class="dl-btn aa" id="dl-aa" disabled>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Descargar AA
-      </button>
-      <button id="change-file">Cambiar archivo</button>
-    </div>
-  </div>
-
-  <!-- Instructions -->
-  <div id="instructions">
-    💡 Haz clic en <strong>COMP</strong> o <strong>AA</strong> debajo de cada página para asignarla. Haz clic de nuevo para quitar la asignación.
   </div>
 
   <!-- Loading -->
   <div id="loading">
     <div class="spinner"></div>
-    <div>Cargando páginas…</div>
+    <div>Analizando comprobantes…</div>
+    <div id="loading-msg"></div>
   </div>
 
-  <!-- Pages grid -->
-  <div id="pages-container"></div>
+  <!-- Result section -->
+  <div id="result-section">
+
+    <!-- Detection banner -->
+    <div id="detection-banner">
+      <div id="banner-left">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <div id="banner-file">
+          <div id="banner-filename">—</div>
+          <div id="banner-sub">—</div>
+          <div class="banner-chips" id="banner-chips"></div>
+        </div>
+      </div>
+      <div id="action-buttons">
+        <button class="dl-btn both" id="dl-both">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Descargar ambos
+        </button>
+        <button class="dl-btn comp" id="dl-comp" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Solo COMP
+        </button>
+        <button class="dl-btn aa" id="dl-aa" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Solo AA
+        </button>
+        <button id="change-file">Cambiar archivo</button>
+      </div>
+    </div>
+
+    <!-- Override note -->
+    <div id="override-note">
+      ✏️ Las asignaciones se detectaron automáticamente. Si algo está incorrecto, usa los botones <strong>COMP / AA</strong> debajo de cada página para corregirlo.
+    </div>
+
+    <!-- Pages grid -->
+    <div id="pages-container"></div>
+
+  </div>
 
 </main>
 
@@ -484,10 +349,10 @@
     <div id="modal-header">
       <span id="modal-title">Página 1</span>
       <div id="modal-nav">
-        <button class="modal-nav-btn" id="modal-prev" title="Anterior">&#8592;</button>
-        <button class="modal-nav-btn" id="modal-next" title="Siguiente">&#8594;</button>
+        <button class="modal-nav-btn" id="modal-prev">&#8592;</button>
+        <button class="modal-nav-btn" id="modal-next">&#8594;</button>
       </div>
-      <button id="modal-close" title="Cerrar">&#10005;</button>
+      <button id="modal-close">&#10005;</button>
     </div>
     <div id="modal-canvas-wrap">
       <canvas id="modal-canvas"></canvas>
@@ -505,25 +370,27 @@
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+  // CLABEs que identifican comprobantes AA
+  const AA_CLABES = ['732010100000055161', '732010100000055158'];
+
   let pdfJsDoc    = null;
   let rawBytes    = null;
   let baseName    = '';
-  let assignments = []; // 'comp' | 'aa' | null per page (0-indexed)
-  let modalPage   = 0;  // current page shown in modal (0-indexed)
+  let assignments = [];
+  let modalPage   = 0;
 
   // ── Elements ──────────────────────────────────────────────────────────────
   const uploadZone     = document.getElementById('upload-zone');
   const fileInput      = document.getElementById('file-input');
   const uploadBtn      = document.getElementById('upload-btn');
-  const toolbar        = document.getElementById('toolbar');
-  const fileNameEl     = document.getElementById('file-name');
-  const pageCountEl    = document.getElementById('page-count');
-  const pagesContainer = document.getElementById('pages-container');
   const loadingEl      = document.getElementById('loading');
-  const instructions   = document.getElementById('instructions');
-  const counters       = document.getElementById('counters');
-  const countComp      = document.getElementById('count-comp');
-  const countAA        = document.getElementById('count-aa');
+  const loadingMsg     = document.getElementById('loading-msg');
+  const resultSection  = document.getElementById('result-section');
+  const bannerFilename = document.getElementById('banner-filename');
+  const bannerSub      = document.getElementById('banner-sub');
+  const bannerChips    = document.getElementById('banner-chips');
+  const pagesContainer = document.getElementById('pages-container');
+  const dlBoth         = document.getElementById('dl-both');
   const dlComp         = document.getElementById('dl-comp');
   const dlAA           = document.getElementById('dl-aa');
   const changeFile     = document.getElementById('change-file');
@@ -551,9 +418,23 @@
     if (file && file.type === 'application/pdf') handleFile(file);
   });
 
-  changeFile.addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
+  changeFile.addEventListener('click', () => {
+    resultSection.classList.remove('visible');
+    pagesContainer.innerHTML = '';
+    uploadZone.style.display = '';
+    fileInput.value = '';
+    fileInput.click();
+  });
 
-  // ── Download ───────────────────────────────────────────────────────────────
+  // ── Downloads ──────────────────────────────────────────────────────────────
+  dlBoth.addEventListener('click', async () => {
+    dlBoth.disabled = true;
+    dlBoth.textContent = 'Generando…';
+    await generateAndDownload('comp');
+    await generateAndDownload('aa');
+    dlBoth.disabled = false;
+    dlBoth.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar ambos`;
+  });
   dlComp.addEventListener('click', () => generateAndDownload('comp'));
   dlAA  .addEventListener('click', () => generateAndDownload('aa'));
 
@@ -562,29 +443,20 @@
   modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
   document.addEventListener('keydown', e => {
     if (!modalOverlay.classList.contains('open')) return;
-    if (e.key === 'Escape')      closeModal();
-    if (e.key === 'ArrowLeft')   navigateModal(-1);
-    if (e.key === 'ArrowRight')  navigateModal(+1);
+    if (e.key === 'Escape')     closeModal();
+    if (e.key === 'ArrowLeft')  navigateModal(-1);
+    if (e.key === 'ArrowRight') navigateModal(+1);
   });
   modalPrev.addEventListener('click', () => navigateModal(-1));
   modalNext.addEventListener('click', () => navigateModal(+1));
   modalBtnComp.addEventListener('click', () => { toggleAssign(modalPage, 'comp'); refreshModalButtons(); });
   modalBtnAA  .addEventListener('click', () => { toggleAssign(modalPage, 'aa');   refreshModalButtons(); });
 
-  function openModal(idx) {
-    modalPage = idx;
-    modalOverlay.classList.add('open');
-    renderModalPage();
-  }
-  function closeModal() {
-    modalOverlay.classList.remove('open');
-  }
+  function openModal(idx) { modalPage = idx; modalOverlay.classList.add('open'); renderModalPage(); }
+  function closeModal()   { modalOverlay.classList.remove('open'); }
   function navigateModal(dir) {
     const next = modalPage + dir;
-    if (next >= 0 && next < pdfJsDoc.numPages) {
-      modalPage = next;
-      renderModalPage();
-    }
+    if (next >= 0 && next < pdfJsDoc.numPages) { modalPage = next; renderModalPage(); }
   }
   async function renderModalPage() {
     const n = pdfJsDoc.numPages;
@@ -592,12 +464,11 @@
     modalPrev.disabled = modalPage === 0;
     modalNext.disabled = modalPage === n - 1;
     refreshModalButtons();
-
-    const page     = await pdfJsDoc.getPage(modalPage + 1);
-    const viewport = page.getViewport({ scale: 2.4 });
-    modalCanvas.width  = viewport.width;
-    modalCanvas.height = viewport.height;
-    await page.render({ canvasContext: modalCanvas.getContext('2d'), viewport }).promise;
+    const page = await pdfJsDoc.getPage(modalPage + 1);
+    const vp   = page.getViewport({ scale: 2.4 });
+    modalCanvas.width  = vp.width;
+    modalCanvas.height = vp.height;
+    await page.render({ canvasContext: modalCanvas.getContext('2d'), viewport: vp }).promise;
   }
   function refreshModalButtons() {
     const g = assignments[modalPage];
@@ -608,136 +479,139 @@
   // ── Core ───────────────────────────────────────────────────────────────────
   async function handleFile(file) {
     baseName = file.name.replace(/\.pdf$/i, '');
-    fileNameEl.textContent  = file.name;
-    pageCountEl.textContent = 'Cargando…';
-
     uploadZone.style.display = 'none';
-    loadingEl.classList.add('visible');
+    resultSection.classList.remove('visible');
     pagesContainer.innerHTML = '';
-    toolbar.classList.remove('visible');
-    instructions.classList.remove('visible');
-    counters.classList.remove('visible');
+    loadingEl.classList.add('visible');
+    loadingMsg.textContent = '';
 
     rawBytes = await file.arrayBuffer();
     pdfJsDoc = await pdfjsLib.getDocument({ data: rawBytes.slice() }).promise;
 
     const n = pdfJsDoc.numPages;
-    pageCountEl.textContent = `${n} página${n !== 1 ? 's' : ''}`;
     assignments = new Array(n).fill(null);
 
-    await renderThumbnails(n);
-
-    loadingEl.classList.remove('visible');
-    toolbar.classList.add('visible');
-    instructions.classList.add('visible');
-    counters.classList.add('visible');
-    updateCounters();
-  }
-
-  async function renderThumbnails(n) {
+    // ── Auto-detect CLABEs ────────────────────────────────────────
+    loadingMsg.textContent = `Analizando ${n} páginas…`;
     for (let i = 1; i <= n; i++) {
-      const page     = await pdfJsDoc.getPage(i);
-      const viewport = page.getViewport({ scale: 3.0 });
-      const canvas   = document.createElement('canvas');
-      canvas.width   = viewport.width;
-      canvas.height  = viewport.height;
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-
-      const card = buildCard(canvas, i);
-      pagesContainer.appendChild(card);
+      loadingMsg.textContent = `Analizando página ${i} de ${n}…`;
+      const page    = await pdfJsDoc.getPage(i);
+      const content = await page.getTextContent();
+      const text    = content.items.map(item => item.str).join('');
+      const isAA    = AA_CLABES.some(clabe => text.includes(clabe));
+      assignments[i - 1] = isAA ? 'aa' : 'comp';
     }
+
+    // ── Render thumbnails ─────────────────────────────────────────
+    loadingMsg.textContent = 'Generando previsualización…';
+    for (let i = 1; i <= n; i++) {
+      const page = await pdfJsDoc.getPage(i);
+      const vp   = page.getViewport({ scale: 3.0 });
+      const canvas = document.createElement('canvas');
+      canvas.width  = vp.width;
+      canvas.height = vp.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      pagesContainer.appendChild(buildCard(canvas, i));
+    }
+
+    // ── Update banner ─────────────────────────────────────────────
+    const nAA   = assignments.filter(a => a === 'aa'  ).length;
+    const nComp = assignments.filter(a => a === 'comp').length;
+
+    bannerFilename.textContent = file.name;
+    bannerSub.textContent      = `${n} página${n !== 1 ? 's' : ''} — detección automática completada`;
+    bannerChips.innerHTML = `
+      <span class="chip comp">${nComp} página${nComp !== 1 ? 's' : ''} → COMP</span>
+      <span class="chip aa">${nAA} página${nAA !== 1 ? 's' : ''} → AA</span>
+    `;
+
+    updateButtons();
+    loadingEl.classList.remove('visible');
+    resultSection.classList.add('visible');
   }
 
   function buildCard(canvas, pageNum) {
-    const idx = pageNum - 1;
+    const idx  = pageNum - 1;
+    const g    = assignments[idx];
 
     const card = document.createElement('div');
-    card.className = 'page-card';
+    card.className = `page-card${g ? ' ' + g : ''}`;
     card.id = `card-${idx}`;
 
     const badge = document.createElement('div');
-    badge.className = 'badge';
-    badge.id = `badge-${idx}`;
+    badge.className   = 'badge';
+    badge.id          = `badge-${idx}`;
+    badge.innerHTML   = g ? `${g.toUpperCase()} <span class="auto-tag">auto</span>` : '';
     card.appendChild(badge);
 
     const wrap = document.createElement('div');
     wrap.className = 'page-canvas-wrap';
     wrap.appendChild(canvas);
-
     const hint = document.createElement('div');
-    hint.className = 'zoom-hint';
+    hint.className   = 'zoom-hint';
     hint.textContent = '🔍 Ver ampliado';
     wrap.appendChild(hint);
     wrap.addEventListener('click', () => openModal(idx));
-
     card.appendChild(wrap);
 
-    const num = document.createElement('div');
-    num.className = 'page-num';
+    const footer = document.createElement('div');
+    footer.className = 'card-footer';
+
+    const num = document.createElement('span');
+    num.className   = 'page-num';
     num.textContent = `Página ${pageNum}`;
-    card.appendChild(num);
+    footer.appendChild(num);
 
     const btnGroup = document.createElement('div');
     btnGroup.className = 'btn-group';
-
     const bComp = document.createElement('button');
-    bComp.className = 'btn-assign-comp';
+    bComp.className   = 'btn-assign-comp';
     bComp.textContent = 'COMP';
     bComp.addEventListener('click', () => toggleAssign(idx, 'comp'));
-
     const bAA = document.createElement('button');
-    bAA.className = 'btn-assign-aa';
+    bAA.className   = 'btn-assign-aa';
     bAA.textContent = 'AA';
     bAA.addEventListener('click', () => toggleAssign(idx, 'aa'));
-
     btnGroup.appendChild(bComp);
     btnGroup.appendChild(bAA);
-    card.appendChild(btnGroup);
+    footer.appendChild(btnGroup);
 
+    card.appendChild(footer);
     return card;
   }
 
   function toggleAssign(idx, group) {
     assignments[idx] = assignments[idx] === group ? null : group;
-    refreshCard(idx);
-    updateCounters();
-  }
-
-  function refreshCard(idx) {
     const card  = document.getElementById(`card-${idx}`);
     const badge = document.getElementById(`badge-${idx}`);
     const g     = assignments[idx];
     card.className    = `page-card${g ? ' ' + g : ''}`;
-    badge.textContent = g ? g.toUpperCase() : '';
+    badge.innerHTML   = g ? `${g.toUpperCase()} <span class="auto-tag">manual</span>` : '';
+    updateButtons();
+    if (modalOverlay.classList.contains('open') && modalPage === idx) refreshModalButtons();
   }
 
-  function updateCounters() {
+  function updateButtons() {
     const nComp = assignments.filter(a => a === 'comp').length;
     const nAA   = assignments.filter(a => a === 'aa'  ).length;
-    countComp.textContent = `COMP: ${nComp}`;
-    countAA  .textContent = `AA: ${nAA}`;
     dlComp.disabled = nComp === 0;
     dlAA  .disabled = nAA   === 0;
+    dlBoth.disabled = nComp === 0 || nAA === 0;
   }
 
   async function generateAndDownload(group) {
-    const pages = assignments
-      .map((a, i) => a === group ? i : -1)
-      .filter(i => i >= 0);
-
+    const pages = assignments.map((a, i) => a === group ? i : -1).filter(i => i >= 0);
     if (pages.length === 0) return;
-
-    const srcDoc  = await PDFLib.PDFDocument.load(rawBytes.slice());
-    const newDoc  = await PDFLib.PDFDocument.create();
-    const copied  = await newDoc.copyPages(srcDoc, pages);
+    const srcDoc = await PDFLib.PDFDocument.load(rawBytes.slice());
+    const newDoc = await PDFLib.PDFDocument.create();
+    const copied = await newDoc.copyPages(srcDoc, pages);
     copied.forEach(p => newDoc.addPage(p));
-
-    const pdfBytes = await newDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `${baseName} ${group.toUpperCase()}.pdf`;
+    const bytes = await newDoc.save();
+    const blob  = new Blob([bytes], { type: 'application/pdf' });
+    const url   = URL.createObjectURL(blob);
+    const a     = document.createElement('a');
+    a.href      = url;
+    a.download  = `${baseName} ${group.toUpperCase()}.pdf`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
   }
