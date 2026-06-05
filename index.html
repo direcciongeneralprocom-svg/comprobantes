@@ -485,49 +485,62 @@
     loadingEl.classList.add('visible');
     loadingMsg.textContent = '';
 
-    rawBytes = await file.arrayBuffer();
-    pdfJsDoc = await pdfjsLib.getDocument({ data: rawBytes.slice() }).promise;
+    try {
+      rawBytes = await file.arrayBuffer();
+      pdfJsDoc = await pdfjsLib.getDocument({ data: rawBytes.slice() }).promise;
 
-    const n = pdfJsDoc.numPages;
-    assignments = new Array(n).fill(null);
+      const n = pdfJsDoc.numPages;
+      assignments = new Array(n).fill(null);
 
-    // ── Auto-detect CLABEs ────────────────────────────────────────
-    loadingMsg.textContent = `Analizando ${n} páginas…`;
-    for (let i = 1; i <= n; i++) {
-      loadingMsg.textContent = `Analizando página ${i} de ${n}…`;
-      const page    = await pdfJsDoc.getPage(i);
-      const content = await page.getTextContent();
-      const text    = content.items.map(item => item.str).join('');
-      const isAA    = AA_CLABES.some(clabe => text.includes(clabe));
-      assignments[i - 1] = isAA ? 'aa' : 'comp';
+      // ── FASE 1: detectar CLABEs (solo texto, rápido) ──────────────
+      loadingMsg.textContent = `Analizando ${n} páginas…`;
+      for (let i = 1; i <= n; i++) {
+        loadingMsg.textContent = `Analizando página ${i} de ${n}…`;
+        const page    = await pdfJsDoc.getPage(i);
+        const content = await page.getTextContent();
+
+        // Unir con y sin espacios para cubrir PDFs donde los dígitos
+        // de la CLABE están fragmentados en items separados
+        const textRaw   = content.items.map(item => item.str).join('');
+        const textClean = textRaw.replace(/\s+/g, '');
+
+        const isAA = AA_CLABES.some(clabe =>
+          textRaw.includes(clabe) || textClean.includes(clabe)
+        );
+        assignments[i - 1] = isAA ? 'aa' : 'comp';
+      }
+
+      // ── FASE 2: mostrar banner inmediatamente ─────────────────────
+      const nAA   = assignments.filter(a => a === 'aa'  ).length;
+      const nComp = assignments.filter(a => a === 'comp').length;
+
+      bannerFilename.textContent = file.name;
+      bannerSub.textContent      = `${n} página${n !== 1 ? 's' : ''} — detección completada`;
+      bannerChips.innerHTML = `
+        <span class="chip comp">${nComp} página${nComp !== 1 ? 's' : ''} → COMP</span>
+        <span class="chip aa">${nAA} página${nAA !== 1 ? 's' : ''} → AA</span>
+      `;
+      updateButtons();
+      loadingEl.classList.remove('visible');
+      resultSection.classList.add('visible');
+
+      // ── FASE 3: renderizar miniaturas una por una (progresivo) ────
+      for (let i = 1; i <= n; i++) {
+        const page   = await pdfJsDoc.getPage(i);
+        const vp     = page.getViewport({ scale: 3.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width  = vp.width;
+        canvas.height = vp.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+        pagesContainer.appendChild(buildCard(canvas, i));
+      }
+
+    } catch (err) {
+      loadingEl.classList.remove('visible');
+      uploadZone.style.display = '';
+      alert('Error al procesar el PDF: ' + err.message);
+      console.error(err);
     }
-
-    // ── Render thumbnails ─────────────────────────────────────────
-    loadingMsg.textContent = 'Generando previsualización…';
-    for (let i = 1; i <= n; i++) {
-      const page = await pdfJsDoc.getPage(i);
-      const vp   = page.getViewport({ scale: 3.0 });
-      const canvas = document.createElement('canvas');
-      canvas.width  = vp.width;
-      canvas.height = vp.height;
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-      pagesContainer.appendChild(buildCard(canvas, i));
-    }
-
-    // ── Update banner ─────────────────────────────────────────────
-    const nAA   = assignments.filter(a => a === 'aa'  ).length;
-    const nComp = assignments.filter(a => a === 'comp').length;
-
-    bannerFilename.textContent = file.name;
-    bannerSub.textContent      = `${n} página${n !== 1 ? 's' : ''} — detección automática completada`;
-    bannerChips.innerHTML = `
-      <span class="chip comp">${nComp} página${nComp !== 1 ? 's' : ''} → COMP</span>
-      <span class="chip aa">${nAA} página${nAA !== 1 ? 's' : ''} → AA</span>
-    `;
-
-    updateButtons();
-    loadingEl.classList.remove('visible');
-    resultSection.classList.add('visible');
   }
 
   function buildCard(canvas, pageNum) {
