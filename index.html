@@ -136,7 +136,7 @@
     /* Pages grid */
     #pages-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+      grid-template-columns: 1fr;
       gap: 28px;
     }
 
@@ -180,7 +180,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 280px;
+      min-height: 600px;
       cursor: zoom-in;
       position: relative;
     }
@@ -637,7 +637,7 @@
   async function renderThumbnails(n) {
     for (let i = 1; i <= n; i++) {
       const page     = await pdfJsDoc.getPage(i);
-      const viewport = page.getViewport({ scale: 0.9 });
+      const viewport = page.getViewport({ scale: 3.0 });
       const canvas   = document.createElement('canvas');
       canvas.width   = viewport.width;
       canvas.height  = viewport.height;
